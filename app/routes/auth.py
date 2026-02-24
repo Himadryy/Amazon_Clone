@@ -26,7 +26,7 @@ def signin():
         else:
             flash("Invalid email or password.", "danger")
 
-    return render_template("signin.html")
+    return render_template("signin.html", cart_item_count=0)
 
 
 @bp.route("/signup", methods=["GET", "POST"])
@@ -57,7 +57,7 @@ def signup():
         flash("Account created successfully! Please sign in.", "success")
         return redirect(url_for("auth.signin"))
 
-    return render_template("signup.html")
+    return render_template("signup.html", cart_item_count=0)
 
 
 @bp.route("/logout")
