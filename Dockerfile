@@ -10,6 +10,6 @@ COPY . .
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 
-EXPOSE 5000
+EXPOSE 3000
 
 CMD ["python", "run.py"]
