@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -97,7 +98,7 @@ class OrderItem(db.Model):
 class WishlistItem(db.Model):
     __tablename__ = "wishlist_items"
 
-    id = db.Column(db.String(36), primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
     product_id = db.Column(db.String(36), db.ForeignKey("products.id"), nullable=False)
     added_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -113,7 +114,7 @@ class WishlistItem(db.Model):
 class CartItem(db.Model):
     __tablename__ = "cart_items"
 
-    id = db.Column(db.String(36), primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
     product_id = db.Column(db.String(36), db.ForeignKey("products.id"), nullable=False)
     quantity = db.Column(db.Integer, default=1)

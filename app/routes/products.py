@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort, flash, redirect, url_for
+from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask_login import current_user
 from app.models import Product, CartItem, WishlistItem
 from app import db
