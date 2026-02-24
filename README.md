@@ -1,16 +1,24 @@
 # Amazon Clone
 
-A full-featured e-commerce web application built with Flask that replicates core Amazon shopping functionality.
+A production-ready e-commerce web application built with Flask that replicates core Amazon shopping functionality. This project demonstrates professional software engineering practices suitable for portfolio demonstration and resume showcasing.
+
+![Python](https://img.shields.io/badge/Python-3.11+-blue?style=flat&logo=python)
+![Flask](https://img.shields.io/badge/Flask-3.0.0-lightgrey?style=flat&logo=flask)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0+-red?style=flat)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue?style=flat&logo=docker)
+![CI/CD](https://img.shields.io/badge/CI/CD-GitHub_Actions-blue?style=flat&logo=github)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
 ## Features
 
 ### Core Functionality
-- **Product Catalog** - Browse 80+ products across 25+ categories
+- **Product Catalog** - Browse products across multiple categories
 - **Shopping Cart** - Add/remove items, quantity management
-- **User Authentication** - Sign in/sign out with session management
+- **User Authentication** - Secure sign in/sign up with Flask-Login
 - **Product Search** - Search products across the catalog
 - **Wishlist** - Save products for later
 - **Order History** - Track past orders
+- **REST API** - Full API endpoints for frontend integration
 
 ### Multi-Language Support
 - English (US)
@@ -20,125 +28,153 @@ A full-featured e-commerce web application built with Flask that replicates core
 - Japanese (Japan)
 
 ### Multi-Currency Support
-- USD ($)
-- INR (₹)
-- EUR (€)
-- JPY (¥)
-- GBP (£)
-
-## Categories
-
-| Category | Description |
-|----------|-------------|
-| Laptops | Gaming, Business, Professional laptops |
-| Watches | Analog, Digital, Luxury watches |
-| Smartwatches | Fitness trackers, Smart wearables |
-| Monitors | Gaming, Office monitors |
-| Headphones | Wireless, Wired, ANC headphones |
-| Smartphones | Latest smartphones |
-| Gaming Components | CPUs, GPUs, Motherboards, RAM, SSDs |
-| Gaming Peripherals | Keyboards, Mice, Headsets |
-| Gaming Furniture | Gaming chairs, Desks |
-| Fashion | Clothing, Footwear, Accessories |
-| Home & Living | Furniture, Decor, Bedding |
-| Kitchenware | Appliances, Cookware |
-| Beauty & Personal Care | Skincare, Makeup |
-| And more... | |
+- USD ($), INR (₹), EUR (€), JPY (¥), GBP (£)
 
 ## Tech Stack
 
-- **Backend**: Flask (Python)
-- **Frontend**: HTML, Tailwind CSS (via CDN)
-- **Database**: In-memory (easily upgradable to SQLite/PostgreSQL)
-- **Dependencies**: Flask, Jinja2, Werkzeug
-
-## Installation
-
-### Prerequisites
-- Python 3.8+
-- pip
-
-### Setup
-
-1. Clone the repository:
-```bash
-git clone https://github.com/Himadryy/Amazon_Clone.git
-cd Amazon_Clone
-```
-
-2. Create virtual environment (optional but recommended):
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. Install dependencies:
-```bash
-pip install flask jinja2 werkzeug
-```
-
-4. Run the application:
-```bash
-python amazon.py
-```
-
-5. Open your browser and visit:
-```
-http://127.0.0.1:5000
-```
+| Layer | Technology |
+|-------|------------|
+| Backend | Flask 3.0 (Python 3.11+) |
+| Database | SQLAlchemy 2.0 + SQLite |
+| Authentication | Flask-Login |
+| Frontend | HTML5, Tailwind CSS |
+| Testing | pytest + coverage |
+| Containerization | Docker |
+| CI/CD | GitHub Actions |
 
 ## Project Structure
 
 ```
 Amazon_Clone/
-├── amazon.py           # Main application (all-in-one)
-├── static/             # Static assets (logos)
-├── amazon_clone.db     # SQLite database (if used)
-├── venv/               # Virtual environment
-└── __pycache__/       # Python cache
+├── app/
+│   ├── __init__.py          # Flask app factory
+│   ├── models.py             # SQLAlchemy ORM models
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── main.py           # Home, search, categories
+│   │   ├── products.py       # Product details, wishlist
+│   │   ├── cart.py           # Cart, checkout, orders
+│   │   ├── auth.py           # Authentication routes
+│   │   └── api.py            # REST API endpoints
+│   ├── templates/            # Jinja2 templates
+│   │   ├── base.html
+│   │   ├── home.html
+│   │   ├── product_detail.html
+│   │   ├── cart.html
+│   │   ├── signin.html
+│   │   ├── signup.html
+│   │   └── ...
+│   └── utils/
+│       └── translations.py    # i18n translations
+├── config.py                 # Configuration management
+├── run.py                   # Application entry point
+├── requirements.txt          # Python dependencies
+├── Dockerfile               # Docker image definition
+├── docker-compose.yml       # Local development setup
+├── pytest.ini               # Test configuration
+├── tests/
+│   └── test_routes.py       # Unit tests
+├── .github/workflows/
+│   └── ci.yml               # CI/CD pipeline
+└── README.md
 ```
 
-## Usage
+## Quick Start
 
-### Default Login
-- Email: `user@example.com`
-- Password: `password`
+### Option 1: Local Development
 
-### Key Routes
+```bash
+# Clone repository
+git clone https://github.com/Himadryy/Amazon_Clone.git
+cd Amazon_Clone
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python run.py
+
+# Open browser
+http://127.0.0.1:5000
+```
+
+### Option 2: Docker
+
+```bash
+# Build and run with Docker
+docker-compose up --build
+
+# Or build manually
+docker build -t amazon-clone .
+docker run -p 5000:5000 amazon-clone
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/products` | List all products (paginated) |
+| GET | `/api/products/<id>` | Get product details |
+| GET | `/api/products/search?q=<query>` | Search products |
+| GET | `/api/categories` | List all categories |
+| GET | `/api/cart` | Get user's cart |
+| GET | `/api/orders` | Get user's orders |
+| GET | `/api/health` | Health check |
+
+## Testing
+
+```bash
+# Run tests with coverage
+pytest tests/ -v --cov=app --cov-report=html
+
+# View coverage report
+open htmlcov/index.html
+```
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FLASK_ENV` | Environment | `development` |
+| `SECRET_KEY` | Flask secret key | `dev-secret-key` |
+| `DATABASE_URL` | Database URI | `sqlite:///amazon_clone.db` |
+
+## Default Login
+
+- **Email:** `user@example.com`
+- **Password:** `password`
+
+## Key Routes
+
 | Route | Description |
 |-------|-------------|
 | `/` | Home page with products |
-| `/search?query=<term>` | Search products |
+| `/category/<name>` | Products by category |
+| `/search?q=<query>` | Search products |
 | `/product/<id>` | Product details |
 | `/cart` | Shopping cart |
-| `/wishlist` | User wishlist |
-| `/signin` | User login |
+| `/auth/signin` | User login |
+| `/auth/signup` | User registration |
 | `/orders` | Order history |
+| `/wishlist` | User wishlist |
 
-## Customization
+## Professional Highlights
 
-### Adding Products
-Edit the `products_list` in `amazon.py`:
-```python
-Product(
-    "Product Name",
-    99.99,
-    "Description",
-    "Category",
-    ["image_url1", "image_url2"],
-    rating=4.5,
-    reviews=100,
-    features=["Feature 1", "Feature 2"],
-    specs={"Key": "Value"}
-)
-```
+This project demonstrates:
 
-### Adding Languages
-Add entries to the `TRANSLATIONS` dictionary in `amazon.py`.
-
-## Screenshots
-
-![Amazon Clone Screenshot](Screenshot%202025-11-23%20at%2012.47.24%20PM.png)
+- ✅ **Modular Architecture** - Clean separation of concerns with Flask blueprints
+- ✅ **ORM Pattern** - SQLAlchemy for database operations
+- ✅ **Authentication** - Secure user sessions with Flask-Login
+- ✅ **RESTful API** - JSON endpoints for frontend integration
+- ✅ **Containerization** - Docker for consistent deployment
+- ✅ **Testing** - Unit tests with pytest
+- ✅ **CI/CD** - GitHub Actions for automated testing
+- ✅ **i18n** - Multi-language support
+- ✅ **Configuration Management** - Environment-based settings
 
 ## License
 
@@ -157,3 +193,4 @@ This project is for **educational purposes only**. It is not affiliated with, en
 - Inspired by Amazon's e-commerce functionality
 - Built with Flask web framework
 - UI styled with Tailwind CSS
+- Architecture inspired by Flask best practices
