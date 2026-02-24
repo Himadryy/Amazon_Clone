@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from flask_login import current_user
 from app.models import CartItem, Product, Order, OrderItem
 from app import db
@@ -18,7 +18,13 @@ def view_cart():
         item.product.price * item.quantity for item in cart_items if item.product
     )
 
-    return render_template("cart.html", cart_items=cart_items, subtotal=subtotal)
+    cart_count = CartItem.query.filter_by(user_id=current_user.id).count()
+    return render_template(
+        "cart.html",
+        cart_items=cart_items,
+        subtotal=subtotal,
+        cart_item_count=cart_count,
+    )
 
 
 @bp.route("/update/<item_id>", methods=["POST"])
@@ -73,7 +79,13 @@ def checkout():
         item.product.price * item.quantity for item in cart_items if item.product
     )
 
-    return render_template("checkout.html", cart_items=cart_items, subtotal=subtotal)
+    cart_count = CartItem.query.filter_by(user_id=current_user.id).count()
+    return render_template(
+        "checkout.html",
+        cart_items=cart_items,
+        subtotal=subtotal,
+        cart_item_count=cart_count,
+    )
 
 
 @bp.route("/place_order", methods=["POST"])
