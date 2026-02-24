@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - Amazon Clone{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Shopping Cart</h1>
+
+{% if cart_items %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            {% for item in cart_items %}
+            <div class="bg-white rounded-lg shadow-md p-4 mb-4 flex">
+                <img src="{{ item.product.image_urls.split('|')[0] if item.product and item.product.image_urls else 'https://placehold.co/150' }}" 
+                     alt="{{ item.product.name if item.product else 'Product' }}" class="w-32 h-32 object-cover rounded">
+                <div class="ml-4 flex-1">
+                    <h3 class="font-semibold">{{ item.product.name if item.product else 'Product' }}</h3>
+                    <p class="text-xl font-bold">${{ "%.2f"|format(item.product.price if item.product else 0) }}</p>
+                    <form action="{{ url_for('cart.update_cart', item_id=item.id) }}" method="post" class="mt-2">
+                        <label class="text-sm">Qty:</label>
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="10" class="border rounded px-2 py-1 w-16">
+                        <button type="submit" class="text-blue-600 hover:underline text-sm ml-2">Update</button>
+                    </form>
+                </div>
+                <a href="{{ url_for('cart.remove_from_cart', item_id=item.id) }}" class="text-red-600 hover:underline self-start">Delete</a>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="bg-white rounded-lg shadow-md p-4 h-fit">
+            <h3 class="font-bold text-lg mb-4">Order Summary</h3>
+            <p class="flex justify-between mb-2">Subtotal: <span class="font-bold">${{ "%.2f"|format(subtotal) }}</span></p>
+            <p class="flex justify-between mb-4">Tax (10%): <span>${{ "%.2f"|format(subtotal * 0.1) }}</span></p>
+            <p class="flex justify-between text-xl font-bold mb-4">Total: <span>${{ "%.2f"|format(subtotal * 1.1) }}</span></p>
+            <a href="{{ url_for('cart.checkout') }}" class="block text-center btn-amazon text-black font-semibold py-2 rounded hover:bg-yellow-500">
+                Proceed to Checkout
+            </a>
+        </div>
+    </div>
+{% else %}
+    <div class="text-center py-12">
+        <p class="text-xl text-gray-600 mb-4">Your Amazon Cart is empty.</p>
+        <a href="{{ url_for('main.home') }}" class="btn-amazon text-black px-6 py-2 rounded hover:bg-yellow-500">Continue Shopping</a>
+    </div>
+{% endif %}
+{% endblock %}

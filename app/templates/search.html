@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - Amazon Clone{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Search Results for "{{ query }}"</h1>
+<p class="text-gray-600 mb-6">{{ products|length }} items found.</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for product in products %}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+            <img src="{{ product.image_urls.split('|')[0] if product.image_urls else 'https://placehold.co/400x300' }}" 
+                 alt="{{ product.name }}" class="w-full h-48 object-cover">
+        </a>
+        <div class="p-4">
+            <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                <h3 class="font-semibold text-lg truncate">{{ product.name }}</h3>
+            </a>
+            <p class="text-2xl font-bold mt-2">${{ "%.2f"|format(product.price) }}</p>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-gray-600">No products found matching your search.</p>
+    {% endfor %}
+</div>
+{% endblock %}

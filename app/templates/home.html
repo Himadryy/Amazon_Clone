@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Amazon Clone - Home{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {% for product in products %}
+    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+        <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+            <img src="{{ product.image_urls.split('|')[0] if product.image_urls else 'https://placehold.co/400x300' }}" 
+                 alt="{{ product.name }}" class="w-full h-48 object-cover">
+        </a>
+        <div class="p-4">
+            <a href="{{ url_for('products.product_detail', product_id=product.id) }}">
+                <h3 class="font-semibold text-lg truncate">{{ product.name }}</h3>
+            </a>
+            <div class="flex items-center mt-1">
+                <div class="flex text-yellow-400 text-sm">
+                    <span class="text-black">{{ "%.1f"|format(product.rating) }}</span>
+                    <span class="ml-1 text-gray-500">({{ product.reviews }})</span>
+                </div>
+            </div>
+            <p class="text-2xl font-bold mt-2">${{ "%.2f"|format(product.price) }}</p>
+            {% if current_user.is_authenticated %}
+            <form action="{{ url_for('products.add_to_cart', product_id=product.id) }}" method="post">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="w-full btn-amazon text-black font-semibold py-2 mt-3 rounded hover:bg-yellow-500 transition">
+                    Add to Cart
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Amazon Clone{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold mb-6">Checkout</h1>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+        <h2 class="font-bold text-lg mb-4">Order Summary</h2>
+        {% for item in cart_items %}
+        <div class="bg-white rounded-lg shadow-md p-4 mb-4 flex">
+            <img src="{{ item.product.image_urls.split('|')[0] if item.product and item.product.image_urls else 'https://placehold.co/100' }}" 
+                 alt="{{ item.product.name if item.product else 'Product' }}" class="w-20 h-20 object-cover rounded">
+            <div class="ml-4">
+                <p class="font-semibold">{{ item.product.name if item.product else 'Product' }}</p>
+                <p class="text-gray-600">Qty: {{ item.quantity }}</p>
+                <p class="font-bold">${{ "%.2f"|format((item.product.price if item.product else 0) * item.quantity) }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="bg-white rounded-lg shadow-md p-6 h-fit">
+        <h3 class="font-bold text-lg mb-4">Order Total</h3>
+        <p class="flex justify-between mb-2">Subtotal: <span class="font-bold">${{ "%.2f"|format(subtotal) }}</span></p>
+        <p class="flex justify-between mb-2">Tax (10%): <span>${{ "%.2f"|format(subtotal * 0.1) }}</span></p>
+        <p class="flex justify-between mb-4 text-xl font-bold">Total: <span>${{ "%.2f"|format(subtotal * 1.1) }}</span></p>
+        <form action="{{ url_for('cart.place_order') }}" method="post">
+            <button type="submit" class="w-full btn-amazon text-black font-semibold py-3 rounded hover:bg-yellow-500 transition">
+                Place Your Order
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

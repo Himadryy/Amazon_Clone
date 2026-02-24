@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - Amazon Clone{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+        <img src="{{ product.image_urls.split('|')[0] if product.image_urls else 'https://placehold.co/600x400' }}" 
+             alt="{{ product.name }}" class="w-full rounded-lg shadow-md">
+    </div>
+    <div>
+        <h1 class="text-2xl font-bold">{{ product.name }}</h1>
+        <div class="flex items-center mt-2">
+            <span class="text-yellow-500">{{ "%.1f"|format(product.rating) }}</span>
+            <span class="ml-2 text-gray-500">({{ product.reviews }} reviews)</span>
+        </div>
+        <p class="text-3xl font-bold mt-4">${{ "%.2f"|format(product.price) }}</p>
+        <p class="mt-4 text-gray-600">{{ product.description }}</p>
+        
+        {% if current_user.is_authenticated %}
+        <form action="{{ url_for('products.add_to_cart', product_id=product.id) }}" method="post" class="mt-6">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="w-full btn-amazon text-black font-semibold py-3 rounded hover:bg-yellow-500 transition">
+                Add to Cart
+            </button>
+        </form>
+        <form action="{{ url_for('products.add_to_wishlist', product_id=product.id) }}" method="post" class="mt-3">
+            <button type="submit" class="w-full border border-yellow-400 text-yellow-500 font-semibold py-3 rounded hover:bg-yellow-50 transition">
+                {% if in_wishlist %}Remove from Wishlist{% else %}Add to Wishlist{% endif %}
+            </button>
+        </form>
+        {% else %}
+        <p class="mt-4 text-gray-500"><a href="{{ url_for('auth.signin') }}" class="text-blue-600 hover:underline">Sign in</a> to purchase</p>
+        {% endif %}
+        
+        {% if product.specs %}
+        <div class="mt-6">
+            <h3 class="font-bold">Specifications:</h3>
+            <ul class="mt-2 text-sm text-gray-600">
+                {% for spec in product.specs.split('|') %}
+                <li>{{ spec }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if related_products %}
+<h2 class="text-xl font-bold mt-12 mb-4">Related Products</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    {% for related in related_products %}
+    <div class="bg-white rounded-lg shadow-md p-4">
+        <a href="{{ url_for('products.product_detail', product_id=related.id) }}">
+            <img src="{{ related.image_urls.split('|')[0] if related.image_urls else 'https://placehold.co/200' }}" 
+                 alt="{{ related.name }}" class="w-full h-32 object-cover rounded">
+            <h3 class="font-semibold mt-2 truncate">{{ related.name }}</h3>
+            <p class="font-bold">${{ "%.2f"|format(related.price) }}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
